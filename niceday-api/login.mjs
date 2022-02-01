@@ -12,5 +12,5 @@ var emailAddress = args[0]
 var password = args[1]
 
 authSdk.login(emailAddress, password).then(response => {
-    console.log('THERAPIST_USER_ID=', response.user.id, '\nNICEDAY_TOKEN=', response.token);
+    console.log('THERAPIST_EMAIL_ADDRESS=', response.user.id, '\nNICEDAY_TOKEN=', response.token);
 });
