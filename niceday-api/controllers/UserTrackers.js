@@ -10,3 +10,13 @@ module.exports.setUserTrackerStatuses = function setUserTrackerStatuses(req, res
       utils.writeJson(res, response);
     });
 };
+
+module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, next, body) {
+  UserTrackers.getSmokingTrackerData(req, body)
+    .then((response) => {
+      utils.writeJson(res, response);
+    })
+    .catch((response) => {
+      utils.writeJson(res, response);
+    });
+};

@@ -39,6 +39,38 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: UserData
+  /usertrackers/smoking/{userId}:
+    get:
+      summary: Get smoking tracker data for specific user
+      operationId: getSmokingTrackerData
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Integer ID of the user whose data is desired
+          example: 38527
+        - in: query
+          name: startTime
+          schema:
+            type: string
+            format: date
+          required: true
+          description: The start of the time range for which to get data
+          example: "2021-01-13"
+        - in: query
+          name: endTime
+          schema:
+            type: string
+            format: date
+          required: true
+          description: The end of the time range for which to get data
+          example: "2022-02-15"
+      responses:
+        "200":
+          description: Succes
+      x-swagger-router-controller: UserTrackers
   /usertrackers/statuses:
     post:
       summary: Enable or disable trackers for a user
