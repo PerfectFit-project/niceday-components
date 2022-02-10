@@ -9,6 +9,8 @@ const MOCK_USER_DATA = {
   },
 };
 const MOCK_TRACKER_RESPONSE = { response: 'mock response' };
+const MOCK_SMOKING_TRACKER_RESPONSE = [
+  {'value': {'measures': {'measureCigarettes': {'sensorData': MOCK_TRACKER_RESPONSE}}}}];
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -46,6 +48,14 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       CustomTrackers: jest.fn().mockImplementation(() => ({
         postUserTrackerStatus: () => new Promise((resolve) => {
           resolve(MOCK_TRACKER_RESPONSE);
+        }),
+      })),
+      SenseTracking: jest.fn().mockImplementation(() => ({
+        getSensorResolved: () => new Promise((resolve) => {
+          resolve(MOCK_SMOKING_TRACKER_RESPONSE);
+        }),
+        init: () => new Promise((resolve) => {
+          resolve();
         }),
       })),
     }));
@@ -106,5 +116,25 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       .catch((error) => {
         throw new Error(`Error during fetch: ${error}`);
       });
+  });
+
+  it('Test getting smoking tracker data with /usertrackers/smoking/ endpoint', () => {
+  /*
+    Sends a GET to the /usertrackers/smoking endpoint.
+  */
+
+  const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/usertrackers/smoking/${NICEDAY_TEST_USER_ID}?`;
+  const params = new URLSearchParams({
+    'startTime': '2021-01-13T09:12:28Z',
+    'endTime': '2022-02-15T09:12:28Z'
+  });
+  return fetch(urlreq + params)
+    .then((response) => response.json())
+    .then((responseBody) => {
+      expect(responseBody).toEqual([MOCK_TRACKER_RESPONSE]);
+    })
+    .catch((error) => {
+      throw new Error(`Error during fetch: ${error}`);
+    });
   });
 });
