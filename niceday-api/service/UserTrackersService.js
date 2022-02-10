@@ -40,7 +40,6 @@ exports.getSmokingTrackerData = (req) => new Promise((resolve, reject) => {
   })
     .then((result) => {
       // Retrieve nested data that is about cigarettes
-      console.log('smokingrepsonse', result);
       const cigaretteData = result.map((c) => c.value.measures.measureCigarettes.sensorData);
       console.log('Result:', cigaretteData);
       resolve(cigaretteData);
