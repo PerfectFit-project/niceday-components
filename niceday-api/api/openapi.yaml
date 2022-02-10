@@ -31,10 +31,10 @@ paths:
         - in: path
           name: userId
           schema:
-            type: integer
+            type: string
           required: true
-          description: Integer ID of the user whose data is desired
-          example: 38527
+          description: ID of the user whose data is desired
+          example: '38527'
       responses:
         "200":
           description: Success
@@ -47,10 +47,10 @@ paths:
         - in: path
           name: userId
           schema:
-            type: integer
+            type: string
           required: true
-          description: Integer ID of the user whose data is desired
-          example: 38527
+          description: ID of the user whose data is desired
+          example: '38527'
         - in: query
           name: startTime
           schema:
