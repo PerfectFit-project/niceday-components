@@ -70,6 +70,13 @@ paths:
       responses:
         "200":
           description: Succes
+          content:
+            application/json:
+              schema:
+                description: List of smoking tracker entries
+                type: array
+                items:
+                  $ref: '#/components/schemas/SmokingTrackerEntry'
       x-swagger-router-controller: UserTrackers
   /usertrackers/statuses:
     post:
@@ -102,6 +109,52 @@ components:
           description: Message to send
           example: Hello World
       description: A Message to Send.
+    SmokingTrackerEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          description: uid of tracker entry
+          example: '620381d1af7a92028c330734'
+        userId:
+          type: integer
+          description: id of user
+          example: 38527
+        startTime: 
+          type: string
+          example: '2022-02-09T08:56:44.349Z'
+        endTime: 
+          type: string
+          example: '2022-02-09T08:56:44.349Z'
+        sensorName:
+          type: string
+          example: 'measure_cigarettes'
+        sourceName: 
+          type: string
+          example: 'goalie_2'
+        version: 
+          type: integer
+          example: 2
+        value:
+          type: object
+          properties:
+            quantity:
+              type: integer
+              description: Number of cigarettes in entry
+              example: 1
+        createdAt: 
+          type: string
+          example: '2022-02-09T08:56:49.628Z'
+        createdBy: 
+          type: integer
+          example: 38527
+        updatedAt:
+          type: string
+          example: '2022-02-09T08:56:49.628Z'
+        updatedBy: 
+          type: integer
+          example: 38527
+
     UserTrackerStatusesInput:
       description: Input for setting user tracker statuses
       required:
@@ -135,3 +188,4 @@ components:
           type: boolean
           description: Whether the tracker should be enabled
           example: true
+
