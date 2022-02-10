@@ -12,7 +12,7 @@ module.exports.setUserTrackerStatuses = function setUserTrackerStatuses(req, res
 };
 
 module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, next, body) {
-  UserTrackers.getSmokingTrackerData(req, body)
+  UserTrackers.getSmokingTrackerData(req)
     .then((response) => {
       utils.writeJson(res, response);
     })
