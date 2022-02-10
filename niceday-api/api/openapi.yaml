@@ -55,18 +55,18 @@ paths:
           name: startTime
           schema:
             type: string
-            format: date
+            format: date-time
           required: true
           description: The start of the time range for which to get data
-          example: "2021-01-13"
+          example: "2021-01-13T09:12:28Z"
         - in: query
           name: endTime
           schema:
             type: string
-            format: date
+            format: date-time
           required: true
           description: The end of the time range for which to get data
-          example: "2022-02-15"
+          example: "2022-02-15T09:12:28Z"
       responses:
         "200":
           description: Succes
