@@ -31,14 +31,53 @@ paths:
         - in: path
           name: userId
           schema:
-            type: integer
+            type: string
           required: true
-          description: Integer ID of the user whose data is desired
-          example: 38527
+          description: ID of the user whose data is desired
+          example: '38527'
       responses:
         "200":
           description: Success
       x-swagger-router-controller: UserData
+  /usertrackers/smoking/{userId}:
+    get:
+      summary: Get smoking tracker data for specific user
+      operationId: getSmokingTrackerData
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user whose data is desired
+          example: '38527'
+        - in: query
+          name: startTime
+          schema:
+            type: string
+            format: date-time
+          required: true
+          description: The start of the time range for which to get data
+          example: "2021-01-13T09:12:28Z"
+        - in: query
+          name: endTime
+          schema:
+            type: string
+            format: date-time
+          required: true
+          description: The end of the time range for which to get data
+          example: "2022-02-15T09:12:28Z"
+      responses:
+        "200":
+          description: Succes
+          content:
+            application/json:
+              schema:
+                description: List of smoking tracker entries
+                type: array
+                items:
+                  $ref: '#/components/schemas/SmokingTrackerEntry'
+      x-swagger-router-controller: UserTrackers
   /usertrackers/statuses:
     post:
       summary: Enable or disable trackers for a user
@@ -70,6 +109,56 @@ components:
           description: Message to send
           example: Hello World
       description: A Message to Send.
+    SmokingTrackerEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          description: uid of tracker entry
+          example: '620381d1af7a92028c330734'
+        userId:
+          type: integer
+          description: id of user
+          example: 38527
+        startTime: 
+          example: '2022-02-09T08:56:44.349Z'
+          type: string
+          format: date-time
+        endTime: 
+          example: '2022-02-09T08:56:44.349Z'
+          type: string
+          format: date-time
+        sensorName:
+          type: string
+          example: 'measure_cigarettes'
+        sourceName: 
+          type: string
+          example: 'goalie_2'
+        version: 
+          type: integer
+          example: 2
+        value:
+          type: object
+          properties:
+            quantity:
+              type: integer
+              description: Number of cigarettes in entry
+              example: 1
+        createdAt:
+          type: string
+          format: date-time
+          example: '2022-02-09T08:56:49.628Z'
+        createdBy: 
+          type: integer
+          example: 38527
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2022-02-09T08:56:49.628Z'
+        updatedBy: 
+          type: integer
+          example: 38527
+
     UserTrackerStatusesInput:
       description: Input for setting user tracker statuses
       required:
@@ -103,3 +192,4 @@ components:
           type: boolean
           description: Whether the tracker should be enabled
           example: true
+

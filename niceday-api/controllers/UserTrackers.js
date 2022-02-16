@@ -10,3 +10,14 @@ module.exports.setUserTrackerStatuses = function setUserTrackerStatuses(req, res
       utils.writeJson(res, response);
     });
 };
+
+// eslint-disable-next-line no-unused-vars
+module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, next, body) {
+  UserTrackers.getSmokingTrackerData(req)
+    .then((response) => {
+      utils.writeJson(res, response);
+    })
+    .catch((response) => {
+      utils.writeJson(res, response);
+    });
+};
