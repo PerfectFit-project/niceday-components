@@ -24,7 +24,8 @@ exports.setUserTrackerStatuses = (req, body) => new Promise((resolve, reject) =>
 });
 
 /**
- * Get smoking tracker data.
+ * Get data from the smoking tracker for a specific user.
+ * I.e. the number of cigarettes that a user smoked in a given period of time.
  * @param req - The node.js express request object
  * @param body - The node.js express body object.
  * */
