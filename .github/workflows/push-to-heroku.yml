@@ -1,0 +1,20 @@
+name: Push Containers to Heroku
+
+on: 
+  push:
+    branches:
+      - test_heroku_container_push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to Heroku Container registry
+      env: 
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:login
+    - name: Build and push
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:push niceday_broker niceday_api --recursive -a ${{ secrets.HEROKU_APP_NAME }}
