@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Fetch the goalie-js private repo
+      shell: bash
+      run: ./niceday-api/script/bootstrap && /niceday-broker/script/bootstrap
     - name: Login to Heroku Container registry
       env: 
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
