@@ -33,14 +33,14 @@ function requestRasa(text, userId, callback) {
 /**
  * Send a message to a niceday recipient
  * */
-function sendMessage(text, recipient_id) {
-  chatSdk.sendTextMessage(recipient_id, text).then((response) => {
-        console.log('Successfully sent the message', response);
-      });
+function sendMessage(text, recipientId) {
+  chatSdk.sendTextMessage(recipientId, text).then((response) => {
+    console.log('Successfully sent the message', response);
+  });
 }
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
