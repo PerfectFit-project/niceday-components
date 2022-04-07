@@ -13,9 +13,15 @@ The rasa response is then sent back to the user in the Niceday app.
 Set THERAPIST_EMAIL_ADDRESS and THERAPIST_PASSWORD in your `.env` file, see .env-example. 
 These will be loaded as environment variables and will thus be available in the app.
 You will get a `InvalidUsernamePasswordError` if the username or password is invalid.
-4. Optionally you can configure the rasa agent url by changing the `RASA_AGENT_URL` 
+
+### Configuration
+1. Optionally you can configure the rasa agent url by changing the `RASA_AGENT_URL` 
 variable in the `.env` file (see `.env-example`). For example if you want to connect to
 localhost instead of `rasa_server` (the default).
+2. Optionally you can configure the environment, the default is 'dev', but you can 
+configure it to be prod by setting `ENVIRONMENT='prod'` in your `.env` file. 
+This will:
+   - toggle whether you want to have a delay in between messages ('prod'), or not ('dev').
 
 ### Running the server
 To run the server, run:

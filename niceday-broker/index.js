@@ -10,7 +10,7 @@ require('isomorphic-fetch');
 // Read in environment variables from .env file
 require('dotenv').config();
 
-const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
+const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS, ENVIRONMENT } = process.env;
 let { RASA_AGENT_URL } = process.env;
 RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://rasa_server:5005/webhooks/rest/webhook' : RASA_AGENT_URL;
 const MESSAGE_DELAY = 3000; // Delay in between messages in ms
@@ -51,7 +51,9 @@ function onRasaResponse() {
   if (this.readyState === 4 && this.status === 200) {
     const responseJson = JSON.parse(this.responseText);
     responseJson.forEach(async (message, i) => {
-      await sleep(i * MESSAGE_DELAY);
+      if (ENVIRONMENT === 'prod') {
+        await sleep(i * MESSAGE_DELAY);
+      }
       sendMessage(message.text, parseInt(message.recipient_id, 10));
     });
   } else if (this.readyState === 4) {
