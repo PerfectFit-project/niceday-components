@@ -10,9 +10,10 @@ require('isomorphic-fetch');
 // Read in environment variables from .env file
 require('dotenv').config();
 
-const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
+const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS, ENVIRONMENT } = process.env;
 let { RASA_AGENT_URL } = process.env;
 RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://rasa_server:5005/webhooks/rest/webhook' : RASA_AGENT_URL;
+const MESSAGE_DELAY = 3000; // Delay in between messages in ms
 
 const chatSdk = new Chat();
 const authSdk = new Authentication(SenseServer.Alpha);
@@ -30,15 +31,30 @@ function requestRasa(text, userId, callback) {
 }
 
 /**
+ * Send a message to a niceday recipient
+ * */
+function sendMessage(text, recipientId) {
+  chatSdk.sendTextMessage(recipientId, text).then((response) => {
+    console.log('Successfully sent the message', response);
+  });
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
  * Handle the response from rasa, send each message to the Niceday user.
+ * We insert a delay in between messages, so the user has some time to read each message.
  * */
 function onRasaResponse() {
   if (this.readyState === 4 && this.status === 200) {
     const responseJson = JSON.parse(this.responseText);
-    responseJson.forEach((message) => {
-      chatSdk.sendTextMessage(parseInt(message.recipient_id, 10), message.text).then((response) => {
-        console.log('Successfully sent the message', response);
-      });
+    responseJson.forEach(async (message, i) => {
+      if (ENVIRONMENT === 'prod') {
+        await sleep(i * MESSAGE_DELAY);
+      }
+      sendMessage(message.text, parseInt(message.recipient_id, 10));
     });
   } else if (this.readyState === 4) {
     console.log('Something went wrong, status:', this.status, this.responseText);
