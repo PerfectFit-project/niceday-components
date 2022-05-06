@@ -21,3 +21,13 @@ module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, 
       utils.writeJson(res, response);
     });
 };
+
+module.exports.setTrackerReminder = function setTrackerReminder(req, res, next, body) {
+  UserTrackers.setTrackerReminder(req, body)
+    .then((response) => {
+      utils.writeJson(res, response);
+    })
+    .catch((response) => {
+      utils.writeJson(res, response);
+    });
+};

@@ -91,6 +91,19 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: UserTrackers
+  /usertrackers/reminder:
+    post:
+      summary: Enable or disable trackers for a user
+      operationId: setTrackerReminder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackerReminder'
+      responses:
+        "200":
+          description: Success
+      x-swagger-router-controller: UserTrackers
 
 components:
   schemas:
@@ -192,4 +205,77 @@ components:
           type: boolean
           description: Whether the tracker should be enabled
           example: true
+
+    TrackerReminder:
+      description: Reminder for a user tracker
+      required:
+      - userId
+      - recurringSchedule
+      type: object
+      properties:
+        userId:
+          type: string
+          description: ID of the user for which the reminder has to be set
+          example: "38527"
+        recurringSchedule:
+          $ref: '#/components/schemas/RecurringSchedule'
+
+    RecurringSchedule:
+      description: Recurring expressions object
+      required:
+      - title
+      - schedule_type
+      - recurring_expression
+      type: object
+      properties:
+        title:
+          type: string
+          description: Titile of the schedule
+          example: 'Smoking entry reminder'
+        schedule_type:
+          type: string
+          description: Type of schedule to set
+          example: 'tracker_smoking'
+        recurring_expression:
+          $ref: '#/components/schemas/RecurringExpression'
+
+    RecurringExpression:
+      description: Recurring expression object
+      required:
+      - margin
+      - reminder_enabled
+      - reminder_margin
+      - rrule
+      type: object
+      properties:
+        margin:
+          $ref: '#/components/schemas/Margin'
+        reminder_enabled:
+          type: boolean
+          description: Flag for enabling reminder
+          example: true
+        reminder_margin:
+          type: array
+          items:
+            $ref: '#/components/schemas/Margin'
+        rrule:
+          type: string
+          description: recursive rule
+          example: 'DTSTART:20220506T150000\nRRULE:FREQ=DAILY'
+
+    Margin:
+      description: Margin object
+      required:
+      - before
+      - after
+      type: object
+      properties:
+        before:
+          type: integer
+          description: before
+          example: 0
+        after:
+          type: integer
+          description: after
+          example: 60
 
