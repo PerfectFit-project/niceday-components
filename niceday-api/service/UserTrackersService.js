@@ -64,7 +64,6 @@ exports.setTrackerReminder = (req, body) => new Promise((resolve, reject) => {
   recurringScheduleSdk.setEnv(SenseServerEnvironment.Alpha);
   recurringScheduleSdk
 	.recurringSchedulePost(req.app.get('token'),userId, recurringSchedule)
-	//.recurringSchedulePost("59f6f5579395073d4f95c37595856f3df2502b8b25af690671a0a3cab1cd3ff0","41482", recurringSchedule)
 	.then((result) => {
       console.log('Result:', result);
       resolve(result);
