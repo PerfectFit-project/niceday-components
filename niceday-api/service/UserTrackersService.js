@@ -1,4 +1,4 @@
-const { CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment } = require('@sense-os/goalie-js'); // eslint-disable-line global-require
+const { CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
 
 const customTrackerSdk = new CustomTrackers(SenseServer.Alpha);
@@ -63,8 +63,8 @@ exports.setTrackerReminder = (req, body) => new Promise((resolve, reject) => {
   console.log('BODY:', recurringSchedule);
   recurringScheduleSdk.setEnv(SenseServerEnvironment.Alpha);
   recurringScheduleSdk
-  .recurringSchedulePost(req.app.get('token'), userId, recurringSchedule)
-  .then((result) => {
+    .recurringSchedulePost(req.app.get('token'), userId, recurringSchedule)
+    .then((result) => {
       console.log('Result:', result);
       resolve(result);
     })
