@@ -1,4 +1,6 @@
-const { CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment } = require('@sense-os/goalie-js');
+const {
+  CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment,
+} = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
 
 const customTrackerSdk = new CustomTrackers(SenseServer.Alpha);
