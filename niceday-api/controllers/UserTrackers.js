@@ -22,7 +22,7 @@ module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, 
     });
 };
 
-module.exports.setTrackerReminder = function setTrackerReminder(req, res, next, body) {
+module.exports.setTrackerReminder = function setTrackerReminder(req, res, body) {
   UserTrackers.setTrackerReminder(req, body)
     .then((response) => {
       utils.writeJson(res, response);
