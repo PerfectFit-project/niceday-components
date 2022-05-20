@@ -22,7 +22,8 @@ module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, 
     });
 };
 
-module.exports.setTrackerReminder = function setTrackerReminder(req, res, body) {
+// eslint-disable-next-line no-unused-vars
+module.exports.setTrackerReminder = function setTrackerReminder(req, res, next, body) {
   UserTrackers.setTrackerReminder(req, body)
     .then((response) => {
       utils.writeJson(res, response);
