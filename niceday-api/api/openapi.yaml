@@ -93,7 +93,7 @@ paths:
       x-swagger-router-controller: UserTrackers
   /usertrackers/reminder:
     post:
-      summary: Enable or disable a tracker reminder for a user
+      summary: Enable or disable trackers for a user
       operationId: setTrackerReminder
       requestBody:
         content:
@@ -230,11 +230,11 @@ components:
       properties:
         title:
           type: string
-          description: Title of the schedule
+          description: Titile of the schedule
           example: 'Smoking entry reminder'
-        tracker_id:
+        schedule_type:
           type: string
-          description: The id of the tracker to set the reminder for
+          description: Type of schedule to set
           example: 'tracker_smoking'
         recurring_expression:
           $ref: '#/components/schemas/RecurringExpression'
@@ -260,7 +260,7 @@ components:
             $ref: '#/components/schemas/Margin'
         rrule:
           type: string
-          description: recursive rule
+          description: recursive rule object as defined [here](https://dateutil.readthedocs.io/en/stable/rrule.html)
           example: 'DTSTART:20220506T150000\nRRULE:FREQ=DAILY'
 
     Margin:
