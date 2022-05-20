@@ -93,7 +93,7 @@ paths:
       x-swagger-router-controller: UserTrackers
   /usertrackers/reminder:
     post:
-      summary: Enable or disable trackers for a user
+      summary: Enable or disable a tracker reminder for a user
       operationId: setTrackerReminder
       requestBody:
         content:
@@ -230,11 +230,11 @@ components:
       properties:
         title:
           type: string
-          description: Titile of the schedule
+          description: Title of the schedule
           example: 'Smoking entry reminder'
-        schedule_type:
+        tracker_id:
           type: string
-          description: Type of schedule to set
+          description: The id of the tracker to set the reminder for
           example: 'tracker_smoking'
         recurring_expression:
           $ref: '#/components/schemas/RecurringExpression'
