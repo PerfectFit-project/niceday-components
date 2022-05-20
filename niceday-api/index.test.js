@@ -165,7 +165,7 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       userId: NICEDAY_TEST_USER_ID.toString(),
       recurringSchedule: {
         title: 'Mok title',
-        tracker_id: 'tracker_smoking',
+        schedule_type: 'tracker_smoking',
         recurring_expression: {
           margin: { before: 0, after: 0 },
           reminder_enabled: true,
