@@ -224,7 +224,7 @@ components:
       description: Recurring expressions object
       required:
       - title
-      - schedule_type
+      - tracker_id
       - recurring_expression
       type: object
       properties:
@@ -232,9 +232,9 @@ components:
           type: string
           description: Titile of the schedule
           example: 'Smoking entry reminder'
-        schedule_type:
+        tracker_id:
           type: string
-          description: Type of schedule to set
+          description: The id of the tracker to set the reminder for
           example: 'tracker_smoking'
         recurring_expression:
           $ref: '#/components/schemas/RecurringExpression'
