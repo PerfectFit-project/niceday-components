@@ -15,8 +15,8 @@ const MOCK_SMOKING_TRACKER_RESPONSE = [
 const MOCK_TRACKER_REMINDER_RESPONSE = {
   scheduleType: 'tracker_smoking',
   owner: NICEDAY_TEST_USER_ID,
-  startTime: '2022-05-17T15:10:00.000Z'
-  };
+  startTime: '2022-05-17T15:10:00.000Z',
+};
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -67,14 +67,14 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
           resolve();
         }),
       })),
-      RecurringSchedulesService : {
+      RecurringSchedulesService: {
         recurringSchedulePost: () => new Promise((resolve) => {
           resolve(MOCK_TRACKER_REMINDER_RESPONSE);
         }),
         setEnv: () => new Promise((resolve) => {
           resolve();
         }),
-      }
+      },
     }));
   });
 
@@ -164,16 +164,16 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
     const data = JSON.stringify({
       userId: NICEDAY_TEST_USER_ID.toString(),
       recurringSchedule: {
-       title: 'Mok title',
-       schedule_type: 'tracker_smoking',
-       recurring_expression: {
-         margin: { before: 0, after: 0 },
-         reminder_enabled: true,
-         reminder_margin: [{ before: 0, after: 0 }],
-         rrule: NICEDAY_TEST_TRACKER_RRULE
-         }
-       }
-    })
+        title: 'Mok title',
+        schedule_type: 'tracker_smoking',
+        recurring_expression: {
+          margin: { before: 0, after: 0 },
+          reminder_enabled: true,
+          reminder_margin: [{ before: 0, after: 0 }],
+          rrule: NICEDAY_TEST_TRACKER_RRULE,
+        },
+      },
+    });
     return fetch(urlreq, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },

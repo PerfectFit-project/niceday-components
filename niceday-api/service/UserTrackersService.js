@@ -61,7 +61,7 @@ exports.getSmokingTrackerData = (req) => new Promise((resolve, reject) => {
  * */
 exports.setTrackerReminder = (req, body) => new Promise((resolve, reject) => {
   const { userId, recurringSchedule } = body;
-  recurringScheduleSdk.setEnv(SenseServerEnvironment.Alpha)
+  recurringScheduleSdk.setEnv(SenseServerEnvironment.Alpha);
   recurringScheduleSdk
     .recurringSchedulePost(req.app.get('token'), userId, recurringSchedule)
     .then((result) => {
