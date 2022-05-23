@@ -21,3 +21,14 @@ module.exports.getSmokingTrackerData = function getSmokingTrackerData(req, res, 
       utils.writeJson(res, response);
     });
 };
+
+// eslint-disable-next-line no-unused-vars
+module.exports.setTrackerReminder = function setTrackerReminder(req, res, next, body) {
+  UserTrackers.setTrackerReminder(req, body)
+    .then((response) => {
+      utils.writeJson(res, response);
+    })
+    .catch((response) => {
+      utils.writeJson(res, response);
+    });
+};

@@ -1,8 +1,11 @@
-const { CustomTrackers, SenseServer, SenseTracking } = require('@sense-os/goalie-js');
+const {
+  CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment,
+} = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
 
 const customTrackerSdk = new CustomTrackers(SenseServer.Alpha);
 const trackingSdk = new SenseTracking();
+const recurringScheduleSdk = RecurringSchedulesService;
 
 /**
  * Set user tracker status.
@@ -44,6 +47,26 @@ exports.getSmokingTrackerData = (req) => new Promise((resolve, reject) => {
       const cigaretteData = result.map((c) => c.value.measures.measureCigarettes.sensorData);
       console.log('Result:', cigaretteData);
       resolve(cigaretteData);
+    })
+    .catch((err) => {
+      console.log('Error:', err);
+      reject(err);
+    });
+});
+
+/**
+ * Set a reminder for a tracker for a specific user.
+ * @param req - The node.js express request object
+ * @param body - The node.js express body object.
+ * */
+exports.setTrackerReminder = (req, body) => new Promise((resolve, reject) => {
+  const { userId, recurringSchedule } = body;
+  recurringScheduleSdk.setEnv(SenseServerEnvironment.Alpha);
+  recurringScheduleSdk
+    .recurringSchedulePost(req.app.get('token'), userId, recurringSchedule)
+    .then((result) => {
+      console.log('Result:', result);
+      resolve(result);
     })
     .catch((err) => {
       console.log('Error:', err);

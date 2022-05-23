@@ -2,6 +2,7 @@ require('isomorphic-fetch');
 
 const NICEDAY_TEST_SERVERPORT = 8080;
 const NICEDAY_TEST_USER_ID = 38527;
+const NICEDAY_TEST_TRACKER_RRULE = 'DTSTART:20210310T150000\nRRULE:FREQ=DAILY';
 const MOCK_USER_DATA = {
   id: NICEDAY_TEST_USER_ID,
   userProfile: {
@@ -11,6 +12,11 @@ const MOCK_USER_DATA = {
 const MOCK_TRACKER_RESPONSE = { response: 'mock response' };
 const MOCK_SMOKING_TRACKER_RESPONSE = [
   { value: { measures: { measureCigarettes: { sensorData: MOCK_TRACKER_RESPONSE } } } }];
+const MOCK_TRACKER_REMINDER_RESPONSE = {
+  scheduleType: 'tracker_smoking',
+  owner: NICEDAY_TEST_USER_ID,
+  startTime: '2022-05-17T15:10:00.000Z',
+};
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -26,6 +32,9 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
     // https://en.wikipedia.org/wiki/Lovecraftian_horror
     jest.mock('@sense-os/goalie-js', () => ({
       SenseServer: () => ({
+        Alpha: undefined,
+      }),
+      SenseServerEnvironment: () => ({
         Alpha: undefined,
       }),
       SenseNetwork: jest.fn().mockImplementation(() => ({
@@ -58,6 +67,14 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
           resolve();
         }),
       })),
+      RecurringSchedulesService: {
+        recurringSchedulePost: () => new Promise((resolve) => {
+          resolve(MOCK_TRACKER_REMINDER_RESPONSE);
+        }),
+        setEnv: () => new Promise((resolve) => {
+          resolve();
+        }),
+      },
     }));
   });
 
@@ -132,6 +149,39 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       .then((response) => response.json())
       .then((responseBody) => {
         expect(responseBody).toEqual([MOCK_TRACKER_RESPONSE]);
+      })
+      .catch((error) => {
+        throw new Error(`Error during fetch: ${error}`);
+      });
+  });
+
+  it('Test setting user tracker reminder with /usertrackers/reminder endpoint', () => {
+    /*
+      Sends a POST to the /usertrackers/reminder endpoint.
+    */
+
+    const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/usertrackers/reminder`;
+    const data = JSON.stringify({
+      userId: NICEDAY_TEST_USER_ID.toString(),
+      recurringSchedule: {
+        title: 'Mok title',
+        schedule_type: 'tracker_smoking',
+        recurring_expression: {
+          margin: { before: 0, after: 0 },
+          reminder_enabled: true,
+          reminder_margin: [{ before: 0, after: 0 }],
+          rrule: NICEDAY_TEST_TRACKER_RRULE,
+        },
+      },
+    });
+    return fetch(urlreq, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((responseBody) => {
+        expect(responseBody).toMatchObject(MOCK_TRACKER_REMINDER_RESPONSE);
       })
       .catch((error) => {
         throw new Error(`Error during fetch: ${error}`);
