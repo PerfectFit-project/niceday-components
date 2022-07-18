@@ -16,20 +16,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Add goaliejs private pull key to ssh-agent
-        shell: bash
-        env:
-          PULL_KEY: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
-        run: |
-          eval `ssh-agent -s`
-          mkdir -p /home/runner/.ssh
-          echo "$PULL_KEY" > /home/runner/.ssh/id_goaliejs
-          chmod 600 /home/runner/.ssh/id_goaliejs
-          ssh-add /home/runner/.ssh/id_goaliejs
-      - name: Pull goaliejs
-        run: |
-          cd ${{ inputs.context }}
-          ./script/bootstrap
+      - uses: actions/checkout@v2
+        with:
+          ssh-key: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
+          ref: v0.39.2
+          repository: senseobservationsystems/goalie-js
+          path: ./build/goalie-js
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
       - name: Log in to registry
