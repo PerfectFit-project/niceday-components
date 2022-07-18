@@ -17,9 +17,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Add goaliejs private pull key to ssh-agent
+        shell: bash
+        env:
+          PULL_KEY: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
         run: |
           eval `ssh-agent -s`
-          echo "${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}" | tr -d '\r' | ssh-add - > /dev/null
+          echo "$PULL_KEY" | tr -d '\r' | ssh-add - > /dev/null
       - name: Pull goaliejs
         run: |
           cd ${{ inputs.context }}
