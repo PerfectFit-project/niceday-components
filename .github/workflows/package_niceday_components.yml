@@ -16,12 +16,13 @@ on:
 
 jobs:
   publish_niceday_broker:
-    uses: ./.github/workflows/ghcr_build_and_push.yml
+    
+    uses: ./.github/workflows/ghcr_build_and_push_with_goaliejs.yml
     with:
       imagename: niceday_broker
-      context: niceday-broker
+      context: niceday-broker/
   publish_niceday_api:
-    uses: ./.github/workflows/ghcr_build_and_push.yml
+    uses: ./.github/workflows/ghcr_build_and_push_with_goaliejs.yml
     with:
       imagename: niceday_api
-      context: niceday-api
+      context: niceday-api/
