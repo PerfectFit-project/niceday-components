@@ -19,7 +19,7 @@ jobs:
       - name: Add goaliejs private pull key to ssh-agent
         run: |
           eval `ssh-agent -s`
-          ssh-add - <<< "${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}"
+          echo "${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}" | tr -d '\r' | ssh-add - > /dev/null
       - name: Pull goaliejs
         run: |
           cd ${{ inputs.context }}
