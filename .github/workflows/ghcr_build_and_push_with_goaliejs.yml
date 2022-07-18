@@ -22,7 +22,10 @@ jobs:
           PULL_KEY: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
         run: |
           eval `ssh-agent -s`
-          echo "$PULL_KEY" | tr -d '\r' | ssh-add - > /dev/null
+          mkdir -p /home/runner/.ssh
+          echo "$PULL_KEY" > /home/runner/.ssh/id_goaliejs
+          chmod 600 /home/runner/.ssh/id_goaliejs
+          ssh-add /home/runner/.ssh/id_goaliejs
       - name: Pull goaliejs
         run: |
           cd ${{ inputs.context }}
