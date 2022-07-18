@@ -20,6 +20,7 @@ jobs:
         with:
           ssh-key: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
           repository: senseobservationsystems/goalie-js
+          branch: develop
       - name: Fetch goaliejs
         shell: bash
         run: |
