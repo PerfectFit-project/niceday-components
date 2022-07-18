@@ -23,7 +23,7 @@ jobs:
           eval `ssh-agent -s`
           mkdir -p ~/.ssh/
           echo "${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}" > ~/.ssh/id_rsa
-          ssh-add /app/.ssh/id_rsa
+          ssh-add ~/.ssh/id_rsa
           ./script/bootstrap
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
