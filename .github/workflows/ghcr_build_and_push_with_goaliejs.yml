@@ -19,7 +19,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ssh-key: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
-          ref: v0.39.2
           repository: senseobservationsystems/goalie-js
           path: ./build/goalie-js
       - name: Build docker image
