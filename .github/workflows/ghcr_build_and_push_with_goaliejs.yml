@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Pull goaliejs
         run: |
+          echo "${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}" > ~/.ssh/id_rsa
           cd ${{ inputs.context }}
           ./script/bootstrap
       - name: Build docker image
