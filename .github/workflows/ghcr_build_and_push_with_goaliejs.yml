@@ -17,11 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Pull goaliejs
-        run: git clone -i {{ secrets.GOALIEJS_PRIVATE_PULL_KEY }} git@github.com:senseobservationsystems/goalie-js.git --single-branch --branch v0.39.2 ./build/goalie-js || exit 2
-      - name: Build docker image
         run: |
           cd ${{ inputs.context }}
-          docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
+          ./script/bootstrap
+      - name: Build docker image
+        run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - name: Push image
