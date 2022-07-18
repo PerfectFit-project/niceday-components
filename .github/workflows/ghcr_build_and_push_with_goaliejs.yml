@@ -16,11 +16,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/checkout@v3
-        with:
-          ssh-key: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
-          repository: senseobservationsystems/goalie-js
-          path: ./build/goalie-js
+      - name: Fetch goaliejs
+        shell: bash
+        run: |
+          cd niceday-broker/
+          ./script/bootstrap
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
       - name: Log in to registry
