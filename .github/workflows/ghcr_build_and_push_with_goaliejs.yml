@@ -23,7 +23,7 @@ jobs:
         run: |
           cd ${{ inputs.context }}
           eval `ssh-agent -s`
-          ssh-add <(echo "$deploykey")
+          ssh-add <(echo "$deploykey" | tr -d "\r")
           ./script/bootstrap
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
