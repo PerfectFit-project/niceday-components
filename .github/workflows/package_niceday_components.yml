@@ -21,8 +21,12 @@ jobs:
     with:
       imagename: niceday_broker
       context: niceday-broker/
+    secrets:
+      goaliejskey: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
   publish_niceday_api:
     uses: ./.github/workflows/ghcr_build_and_push_with_goaliejs.yml
     with:
       imagename: niceday_api
       context: niceday-api/
+    secrets:
+      goaliejskey: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
