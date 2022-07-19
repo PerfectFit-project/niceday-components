@@ -16,14 +16,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
       - name: Fetch goaliejs
-        shell: bash
-        env:
-          deploykey: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
         run: |
           cd ${{ inputs.context }}
-          eval `ssh-agent -s`
-          ssh-add <(echo "$deploykey")
           ./script/bootstrap
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
