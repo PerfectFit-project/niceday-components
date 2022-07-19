@@ -19,17 +19,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Add goaliejs deployment key
-        shell: bash
-        run: |
-          eval `ssh-agent -s`
-          ssh-add - <(echo "${{ secrets.goaliejskey }}")
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.goaliejskey }}
       - name: Fetch goaliejs
         run: |
           cd ${{ inputs.context }}
           ./script/bootstrap
       - name: Build docker image
-        run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
+        run: |
+          cd ${{ inputs.context }}
+          docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
       - name: Push image
