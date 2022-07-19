@@ -19,9 +19,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.goaliejskey }}
+      - name: Add goaliejs deployment key
+        shell: bash
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <(echo "${{ secrets.goaliejskey }}")
       - name: Fetch goaliejs
         run: |
           cd ${{ inputs.context }}
