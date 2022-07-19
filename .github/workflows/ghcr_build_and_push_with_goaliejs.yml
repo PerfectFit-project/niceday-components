@@ -19,11 +19,11 @@ jobs:
       - name: Fetch goaliejs
         shell: bash
         env:
-          deploykey: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY_BASE64 }}
+          deploykey: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
         run: |
           cd ${{ inputs.context }}
           eval `ssh-agent -s`
-          ssh-add <(echo "$deploykey" | base64 -d | tr -d '\r')
+          ssh-add <(echo -e "$deploykey")
           ./script/bootstrap
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
