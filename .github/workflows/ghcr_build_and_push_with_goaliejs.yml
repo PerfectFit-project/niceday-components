@@ -16,20 +16,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          repository: senseobservationsystems/goalie-js
-          ref: develop
       - name: Fetch goaliejs
         shell: bash
+        env:
+          deploykey: ${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}
         run: |
-          cd niceday-broker/
+          cd ${{ inputs.context }}
           eval `ssh-agent -s`
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.GOALIEJS_PRIVATE_PULL_KEY }}" > ~/.ssh/id_goaliejs
-          chmod 400 ~/.ssh/id_goaliejs
-          ssh-add ~/.ssh/id_goaliejs
+          ssh-add <(echo "$deploykey")
           ./script/bootstrap
       - name: Build docker image
         run: docker build . -t ${{ inputs.imagename }} --tag ${{ inputs.imagename }} --label "runnumber=${GITHUB_RUN_ID}" -f Dockerfile
