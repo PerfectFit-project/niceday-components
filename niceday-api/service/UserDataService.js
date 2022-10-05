@@ -1,7 +1,7 @@
-const { SenseNetwork, SenseServer } = require('@sense-os/goalie-js');
+const { Contacts, SenseServer } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
 
-const userNetwork = new SenseNetwork(SenseServer.Alpha);
+const userNetwork = new Contacts(SenseServer.Alpha);
 
 /**
  * Fetch the user data corresponding to the given user ID.
@@ -11,7 +11,7 @@ const userNetwork = new SenseNetwork(SenseServer.Alpha);
  * */
 exports.getUserData = (req, body) => new Promise((resolve, reject) => {
   userNetwork
-    .getContact(req.app.get('token'), body)
+    .getConnectedContacts(req.app.get('token'), body)
     .then((result) => {
       console.log('Result:', result);
       resolve(result);
