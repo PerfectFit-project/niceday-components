@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ ! -d "./build/goalie-js" ]]; then
-    git clone https://github.com/wbaccinelli/goalie-js.git --single-branch --branch wbaccinelli-filechat-fix ./build/goalie-js || exit 2
+    git clone https://github.com/PerfectFit-project/goalie-js.git --single-branch --branch perfectfit-patch ./build/goalie-js || exit 2
 fi
 
 cd ./build/goalie-js
