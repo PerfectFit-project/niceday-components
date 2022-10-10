@@ -1,8 +1,8 @@
 const { Contacts, SenseServer } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
 
-const userNetwork = new Contacts(SenseServer.Alpha);
-
+const userNetwork = new Contacts();
+userNetwork.init(SenseServer.Alpha)
 /**
  * Fetch the user data corresponding to the given user ID.
  * Returns the JSON as received from the SenseServer.
