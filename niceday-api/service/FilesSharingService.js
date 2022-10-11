@@ -10,7 +10,6 @@ require('isomorphic-fetch');
  * @param body - The node.js express body object
  * */
 exports.uploadFile = (req, body) => new Promise((resolve, reject) => {
-      console.log('Upload file')
       const fileChat = new FileChat()
 
       fileChat.init(SenseServer.Alpha)
@@ -21,12 +20,11 @@ exports.uploadFile = (req, body) => new Promise((resolve, reject) => {
       requestHeaders.append("Authorization", "Token "+token);
 
       var formData = new FormData();
-      var file=fs.readFileSync(body.file_path)
-      formData.append("file", file,{
+      formData.append("file", req.files[0].buffer,{
         filepath: body.file_path
       });
-      formData.append("name", body.file_name);
-      formData.append("receiver", body.receiver_id);
+      formData.append("name", req.files[0].originalname);
+      formData.append("receiver", Number(body.receiver_id));
 
       var requestOptions = {
         method: 'POST',
@@ -36,9 +34,10 @@ exports.uploadFile = (req, body) => new Promise((resolve, reject) => {
       };
 
       fetch(baseUrl + "?Authorization="+token, requestOptions)
+        .then(response => response.text())
         .then((result) => {
             console.log('Successfully uploaded file ', result)
-            resolve()
+            resolve(result)
         })
         .catch((err) => {
           console.log('Error:', err);
