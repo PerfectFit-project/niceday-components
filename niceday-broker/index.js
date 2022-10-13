@@ -26,7 +26,7 @@ function requestRasa(text, userId, attachmentIds, callback) {
   xhr.open('POST', RASA_AGENT_URL, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = callback;
-  const data = JSON.stringify({ sender: userId, message: text, metadata: attachmentIds });
+  const data = JSON.stringify({ sender: userId, message: text, metadata: {'attachmentIds': attachmentIds} });
   xhr.send(data);
 }
 
