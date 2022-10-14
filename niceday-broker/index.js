@@ -50,7 +50,6 @@ function sleep(ms) {
 function onRasaResponse() {
   if (this.readyState === 4 && this.status === 200) {
     const responseJson = JSON.parse(this.responseText);
-    console.log(responseJson)
     responseJson.forEach(async (message, i) => {
       if (ENVIRONMENT === 'prod') {
         await sleep(i * MESSAGE_DELAY);
