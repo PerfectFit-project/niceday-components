@@ -26,7 +26,11 @@ function requestRasa(text, userId, attachmentIds, callback) {
   xhr.open('POST', RASA_AGENT_URL, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = callback;
-  const data = JSON.stringify({ sender: userId, message: text, metadata: {'attachmentIds': attachmentIds} });
+  const data = JSON.stringify({
+    sender: userId,
+    message: text,
+    metadata: { attachmentIds },
+  });
   xhr.send(data);
 }
 
@@ -54,14 +58,14 @@ function onRasaResponse() {
       if (ENVIRONMENT === 'prod') {
         await sleep(i * MESSAGE_DELAY);
       }
-      var attachment = {
+      const attachment = {
         replyOfId: null,
-        attachmentIds: []
+        attachmentIds: [],
+      };
+      if (message.hasOwn('metadata')) {
+        attachment.attachmentIds = message.metadata;
       }
-      if(message.hasOwnProperty('metadata')){
-          attachment.attachmentIds = message.metadata
-      }
-      sendMessage(message.text, parseInt(message.recipient_id, 10),attachment);
+      sendMessage(message.text, parseInt(message.recipient_id, 10), attachment);
     });
   } else if (this.readyState === 4) {
     console.log('Something went wrong, status:', this.status, this.responseText);
@@ -84,7 +88,6 @@ class MessageHandler {
     }
   }
 }
-
 
 function setup(therapistId, token) {
   // Setup connection
