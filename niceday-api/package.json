@@ -16,7 +16,7 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
-    "@sense-os/goalie-js": "file:build/goalie-js",
+    "@sense-os/goalie-js": "senseobservationsystems/goalie-js#v0.53.4",
     "connect": "^3.2.0",
     "dotenv": "^8.2.0",
     "form-data": "^4.0.0",
