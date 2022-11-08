@@ -37,8 +37,8 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       SenseServerEnvironment: () => ({
         Alpha: undefined,
       }),
-      SenseNetwork: jest.fn().mockImplementation(() => ({
-        getContact: () => new Promise((resolve) => {
+      Contacts: jest.fn().mockImplementation(() => ({
+        getConnectedContacts: () => new Promise((resolve) => {
           resolve(MOCK_USER_DATA);
         }),
       })),
