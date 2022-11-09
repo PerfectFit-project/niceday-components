@@ -23,6 +23,34 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: Messages
+  /files:
+    post:
+      tags:
+      - files
+      summary: Upload a file
+      operationId: uploadFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                receiver_id:
+                  type: string
+                  description: ID of the user we want to upload the file to
+                  example: 38527
+                file_path:
+                  type: string
+                  description: Local path to the file we want to upload
+                  example: C:/username/pathtofile
+                file:
+                  type: string
+                  format: binary
+              
+      responses:
+        "200":
+          description: Success
+      x-swagger-router-controller: FileSharing
   /userdata/{userId}:
     get:
       summary: Get user data by ID
@@ -107,10 +135,22 @@ paths:
 
 components:
   schemas:
+    FileObject:
+      properties:
+        receiver_id:
+          type: integer
+          description: ID of the user we want to upload the file to
+          example: 38527
+        file_path:
+          type: string
+          description: Local path to the file we want to upload
+          example: C:/username/pathtofile
+      description: A file to upload.
+
     Message:
       required:
-      - recipient_id
-      - text
+        - recipient_id
+        - text
       type: object
       properties:
         recipient_id:

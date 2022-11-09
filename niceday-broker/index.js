@@ -21,20 +21,24 @@ const authSdk = new Authentication(SenseServer.Alpha);
 /**
  * Request a response from rasa for a given text message
  * */
-function requestRasa(text, userId, callback) {
+function requestRasa(text, userId, attachmentIds, callback) {
   const xhr = new XMLHttpRequest();
   xhr.open('POST', RASA_AGENT_URL, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = callback;
-  const data = JSON.stringify({ sender: userId, message: text });
+  const data = JSON.stringify({
+    sender: userId,
+    message: text,
+    metadata: { attachmentIds },
+  });
   xhr.send(data);
 }
 
 /**
  * Send a message to a niceday recipient
  * */
-function sendMessage(text, recipientId) {
-  chatSdk.sendTextMessage(recipientId, text).then((response) => {
+function sendMessage(text, recipientId, additionalContents) {
+  chatSdk.sendTextMessage(recipientId, text, additionalContents).then((response) => {
     console.log('Successfully sent the message', response);
   });
 }
@@ -54,7 +58,14 @@ function onRasaResponse() {
       if (ENVIRONMENT === 'prod') {
         await sleep(i * MESSAGE_DELAY);
       }
-      sendMessage(message.text, parseInt(message.recipient_id, 10));
+      const attachment = {
+        replyOfId: null,
+        attachmentIds: [],
+      };
+      if (message.hasOwn('metadata')) {
+        attachment.attachmentIds = message.metadata;
+      }
+      sendMessage(message.text, parseInt(message.recipient_id, 10), attachment);
     });
   } else if (this.readyState === 4) {
     console.log('Something went wrong, status:', this.status, this.responseText);
@@ -73,7 +84,7 @@ class MessageHandler {
   onIncomingMessage(message) {
     console.log(message);
     if (message.from !== this.therapistId && message.to === this.therapistId) {
-      requestRasa(message.content.TEXT, message.from, onRasaResponse);
+      requestRasa(message.content.TEXT, message.from, message.attachmentIds, onRasaResponse);
     }
   }
 }
