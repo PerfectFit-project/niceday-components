@@ -15,7 +15,7 @@ exports.uploadFile = (req, body) => new Promise((resolve, reject) => {
   const baseUrl = fileChat.baseUrl();
 
   const token = req.app.get('token');
-  const requestHeaders = new fetch.Headers();
+  const requestHeaders = new Headers();
   requestHeaders.append('Authorization', `Token ${token}`);
   const formData = new FormData();
   formData.append('file', req.files[0].buffer, {
