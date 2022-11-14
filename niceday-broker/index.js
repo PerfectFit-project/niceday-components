@@ -62,8 +62,7 @@ function onRasaResponse() {
         replyOfId: null,
         attachmentIds: [],
       };
-      // eslint-disable-next-line no-prototype-builtins
-      if (message.hasOwnProperty('metadata')) {
+      if ('metadata' in message) {
         attachment.attachmentIds = message.metadata;
       }
       sendMessage(message.text, parseInt(message.recipient_id, 10), attachment);
