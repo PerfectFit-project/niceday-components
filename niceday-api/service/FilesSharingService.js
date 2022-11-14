@@ -15,6 +15,7 @@ exports.uploadFile = (req, body) => new Promise((resolve, reject) => {
   const baseUrl = fileChat.baseUrl();
 
   const token = req.app.get('token');
+  // eslint-disable-next-line no-undef
   const requestHeaders = new Headers();
   requestHeaders.append('Authorization', `Token ${token}`);
   const formData = new FormData();

@@ -62,7 +62,7 @@ function onRasaResponse() {
         replyOfId: null,
         attachmentIds: [],
       };
-      if (message.hasOwn('metadata')) {
+      if ('metadata' in message) {
         attachment.attachmentIds = message.metadata;
       }
       sendMessage(message.text, parseInt(message.recipient_id, 10), attachment);
