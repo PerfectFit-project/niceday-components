@@ -9,10 +9,11 @@ const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/go
  * no response value expected for this operation
  * */
 exports.sendTextMessage = function (req, body) {
-  return new Promise((resolve, reject) => { // eslint-disable-line no-unused-vars
+  return new Promise((resolve, reject) => {
     const chatSdk = new Chat();
     chatSdk.init(SenseServerEnvironment.Alpha);
-    chatSdk.connect(req.app.get('therapistId'), req.app.get('token'));
+    chatSdk.connect(req.app.get('therapistId'), req.app.get('token'))
+      .catch((error) => reject(error));
 
     const subscriptionId = chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
       if (connectionStatus === ConnectionStatus.Connected) {
@@ -20,9 +21,10 @@ exports.sendTextMessage = function (req, body) {
         chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
           console.log('Successfully sent the message', response);
           chatSdk.unsubscribeFromConnectionStatusChanges(subscriptionId);
-        });
+          resolve();
+        })
+          .catch((error) => reject(error));
       }
     });
-    resolve();
   });
 };

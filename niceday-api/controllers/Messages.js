@@ -7,6 +7,6 @@ module.exports.sendTextMessage = function sendTextMessage(req, res, next, body) 
       utils.writeJson(res, response);
     })
     .catch((response) => {
-      utils.writeJson(res, response);
+      utils.writeJson(res, utils.respondWithCode(500, response));
     });
 };
