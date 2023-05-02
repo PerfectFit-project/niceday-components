@@ -18,7 +18,7 @@ function createNicedayApiServer() {
   else {
       selectedServer = SenseServer.Production;
   }
-
+  const authSdk = new Authentication(selectedServer);
   // swaggerRouter configuration
   const options = {
     routing: {
