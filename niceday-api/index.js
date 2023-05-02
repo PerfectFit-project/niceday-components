@@ -11,11 +11,12 @@ const serverPort = 8080;
 
 function createNicedayApiServer() {
   const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS, ENVIRONMENT } = process.env;
+
   if (ENVIRONMENT == 'dev'){
-      const authSdk = new Authentication(SenseServer.Alpha);
+      selectedServer = SenseServer.Alpha;
   }
   else {
-      const authSdk = new Authentication(SenseServer.Production);
+      selectedServer = SenseServer.Production;
   }
 
   // swaggerRouter configuration
