@@ -1,11 +1,12 @@
 const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/goalie-js');
-const { ENVIRONMENT } = process.env;
 
-if (ENVIRONMENT == 'dev'){
-    selectedServerEnv = SenseServerEnvironment.Alpha;
-}
-else {
-    selectedServerEnv = SenseServerEnvironment.Production;
+const { ENVIRONMENT } = process.env;
+let selectedServerEnv;
+
+if (ENVIRONMENT === 'dev') {
+  selectedServerEnv = SenseServerEnvironment.Alpha;
+} else {
+  selectedServerEnv = SenseServerEnvironment.Production;
 }
 
 /**

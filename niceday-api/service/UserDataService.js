@@ -1,10 +1,12 @@
 const { Contacts, SenseServer } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
+
 const { ENVIRONMENT } = process.env;
-if (ENVIRONMENT == 'dev'){
+let selectedServer;
+
+if (ENVIRONMENT === 'dev') {
   selectedServer = SenseServer.Alpha;
-}
-else {
+} else {
   selectedServer = SenseServer.Production;
 }
 

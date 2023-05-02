@@ -2,16 +2,16 @@ const {
   CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment,
 } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
-const { ENVIRONMENT } = process.env;
 
-if (ENVIRONMENT == 'dev'){
-    selectedServer = SenseServer.Alpha;
-    selectedServerEnv = SenseServerEnvironment.Alpha;
+const { ENVIRONMENT } = process.env;
+let selectedServer;
+
+if (ENVIRONMENT === 'dev') {
+  selectedServer = SenseServer.Alpha;
+} else {
+  selectedServer = SenseServer.Production;
 }
-else {
-    selectedServer = SenseServer.Production;
-    selectedServerEnv = SenseServerEnvironment.Production;
-}
+
 const customTrackerSdk = new CustomTrackers(selectedServer);
 const trackingSdk = new SenseTracking();
 const recurringScheduleSdk = RecurringSchedulesService;
