@@ -16,11 +16,13 @@ RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://rasa_server:5005/webho
 const MESSAGE_DELAY = 3000; // Delay in between messages in ms
 
 const chatSdk = new Chat();
-if (ENVIRONMENT == 'dev'){
+let selectedServer;
+let selectedServerEnv;
+
+if (ENVIRONMENT === 'dev') {
   selectedServer = SenseServer.Alpha;
   selectedServerEnv = SenseServerEnvironment.Alpha;
-}
-else {
+} else {
   selectedServer = SenseServer.Production;
   selectedServerEnv = SenseServerEnvironment.Production;
 }
