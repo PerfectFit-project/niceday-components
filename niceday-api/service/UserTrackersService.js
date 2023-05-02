@@ -2,8 +2,17 @@ const {
   CustomTrackers, SenseServer, SenseTracking, RecurringSchedulesService, SenseServerEnvironment,
 } = require('@sense-os/goalie-js');
 require('isomorphic-fetch');
+const { ENVIRONMENT } = process.env;
 
-const customTrackerSdk = new CustomTrackers(SenseServer.Alpha);
+if (ENVIRONMENT == 'dev'){
+    selectedServer = SenseServer.Alpha;
+    selectedServerEnv = SenseServerEnvironment.Alpha;
+}
+else {
+    selectedServer = SenseServer.Production;
+    selectedServerEnv = SenseServerEnvironment.Production;
+}
+const customTrackerSdk = new CustomTrackers(selectedServer);
 const trackingSdk = new SenseTracking();
 const recurringScheduleSdk = RecurringSchedulesService;
 
@@ -35,7 +44,7 @@ exports.setUserTrackerStatuses = (req, body) => new Promise((resolve, reject) =>
 exports.getSmokingTrackerData = (req) => new Promise((resolve, reject) => {
   const { startTime, endTime } = req.query;
   const { userId } = req.openapi.pathParams;
-  trackingSdk.init(req.app.get('token'), SenseServer.Alpha);
+  trackingSdk.init(req.app.get('token'), selectedServer);
   trackingSdk.getSensorResolved({
     sensorName: ['tracker_smoking'],
     startTime: new Date(startTime).toISOString(),
@@ -61,7 +70,7 @@ exports.getSmokingTrackerData = (req) => new Promise((resolve, reject) => {
  * */
 exports.setTrackerReminder = (req, body) => new Promise((resolve, reject) => {
   const { userId, recurringSchedule } = body;
-  recurringScheduleSdk.setEnv(SenseServerEnvironment.Alpha);
+  recurringScheduleSdk.setEnv(SenseServerEnvironment);
   recurringScheduleSdk
     .recurringSchedulePost(req.app.get('token'), userId, recurringSchedule)
     .then((result) => {

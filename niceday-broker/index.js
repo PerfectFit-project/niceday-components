@@ -16,7 +16,16 @@ RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://rasa_server:5005/webho
 const MESSAGE_DELAY = 3000; // Delay in between messages in ms
 
 const chatSdk = new Chat();
-const authSdk = new Authentication(SenseServer.Alpha);
+if (ENVIRONMENT == 'dev'){
+  selectedServer = SenseServer.Alpha;
+  selectedServerEnv = SenseServerEnvironment.Alpha;
+}
+else {
+  selectedServer = SenseServer.Production;
+  selectedServerEnv = SenseServerEnvironment.Production;
+}
+
+const authSdk = new Authentication(selectedServer);
 
 /**
  * Request a response from rasa for a given text message
@@ -91,7 +100,7 @@ class MessageHandler {
 
 function setup(therapistId, token) {
   // Setup connection
-  chatSdk.init(SenseServerEnvironment.Alpha);
+  chatSdk.init(selectedServerEnv);
   chatSdk.connect(therapistId, token);
 
   // Send initial presence when connected

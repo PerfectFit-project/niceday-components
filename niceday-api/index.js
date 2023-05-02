@@ -10,8 +10,13 @@ require('dotenv').config();
 const serverPort = 8080;
 
 function createNicedayApiServer() {
-  const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS } = process.env;
-  const authSdk = new Authentication(SenseServer.Alpha);
+  const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS, ENVIRONMENT } = process.env;
+  if (ENVIRONMENT == 'dev'){
+      const authSdk = new Authentication(SenseServer.Alpha);
+  }
+  else {
+      const authSdk = new Authentication(SenseServer.Production);
+  }
 
   // swaggerRouter configuration
   const options = {
