@@ -85,7 +85,7 @@ class MessageHandler {
     console.log(message);
     if (message.from !== this.therapistId && message.to === this.therapistId) {
       // we have to mark the message as read we it is received by the therapist
-      chatSdk.markMessageAsRead(message.from, message.id)
+      chatSdk.markMessageAsRead(message.from, message.id);
       requestRasa(message.content.TEXT, message.from, message.attachmentIds, onRasaResponse);
     }
   }
