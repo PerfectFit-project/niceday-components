@@ -2,6 +2,7 @@ const { SenseServer, FileChat } = require('@sense-os/goalie-js');
 const FormData = require('form-data');
 const fetch = require('isomorphic-fetch');
 
+const { ENVIRONMENT } = process.env;
 /**
  * Upload a file
  *
@@ -11,7 +12,12 @@ const fetch = require('isomorphic-fetch');
 exports.uploadFile = (req, body) => new Promise((resolve, reject) => {
   const fileChat = new FileChat();
 
-  fileChat.init(SenseServer.Alpha);
+  if (ENVIRONMENT === 'dev') {
+    fileChat.init(SenseServer.Alpha);
+  } else {
+    fileChat.init(SenseServer.Production);
+  }
+
   const baseUrl = fileChat.baseUrl();
 
   const token = req.app.get('token');

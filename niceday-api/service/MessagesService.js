@@ -1,5 +1,14 @@
 const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/goalie-js');
 
+const { ENVIRONMENT } = process.env;
+let selectedServerEnv;
+
+if (ENVIRONMENT === 'dev') {
+  selectedServerEnv = SenseServerEnvironment.Alpha;
+} else {
+  selectedServerEnv = SenseServerEnvironment.Production;
+}
+
 /**
  * Send a text message
  *
@@ -11,7 +20,7 @@ const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/go
 exports.sendTextMessage = function (req, body) {
   return new Promise((resolve, reject) => {
     const chatSdk = new Chat();
-    chatSdk.init(SenseServerEnvironment.Alpha);
+    chatSdk.init(selectedServerEnv);
     chatSdk.connect(req.app.get('therapistId'), req.app.get('token'))
       .catch((error) => reject(error));
 
