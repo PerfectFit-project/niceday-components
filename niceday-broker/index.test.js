@@ -28,6 +28,7 @@ describe('Test niceday-broker with mocked Rasa and goaliejs', () => {
       Chat: jest.fn().mockImplementation(() => ({
         init: jest.fn(),
         connect: jest.fn(),
+        markMessageAsRead: jest.fn(),
         subscribeToConnectionStatusChanges: jest.fn(),
         sendInitialPresence: jest.fn(),
         subscribeToIncomingMessage: (handler) => {
