@@ -1,4 +1,5 @@
 const goalieJs = require('@sense-os/goalie-js');
+const schedule = require('node-schedule');
 
 const {
   Chat, Authentication, SenseServer, SenseServerEnvironment,
@@ -102,10 +103,30 @@ class MessageHandler {
   }
 }
 
+function setupTokenRegeneration() {
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = new schedule.Range(0,23,9);
+
+  const job = schedule.scheduleJob(rule, function(){
+
+    authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+      .then((response) => {
+        chatSdk.init(selectedServerEnv);
+        chatSdk.connect(response.user.id, response.token);
+    })
+    .catch((error) => {
+    throw Error(`Error during authentication: ${error}`);
+    });
+  
+  });
+}
+
 function setup(therapistId, token) {
   // Setup connection
   chatSdk.init(selectedServerEnv);
   chatSdk.connect(therapistId, token);
+
+  setupTokenRegeneration();
 
   // Send initial presence when connected
   chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
