@@ -1,14 +1,15 @@
-const { Chat, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/goalie-js');
+const { Authentication, Chat, SenseServer, SenseServerEnvironment, ConnectionStatus } = require('@sense-os/goalie-js');
+const { ENVIRONMENT, THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD } = process.env;
 
-const { ENVIRONMENT } = process.env;
-let selectedServerEnv;
-
-if (ENVIRONMENT === 'dev') {
-  selectedServerEnv = SenseServerEnvironment.Alpha;
-} else {
-  selectedServerEnv = SenseServerEnvironment.Production;
+if (ENVIRONMENT == 'dev'){
+    selectedServerEnv = SenseServerEnvironment.Alpha;
+    selectedServer = SenseServer.Alpha;
 }
-
+else {
+    selectedServerEnv = SenseServerEnvironment.Production;
+    selectedServer = SenseServer.Production;
+}
+const authSdk = new Authentication(selectedServer);
 /**
  * Send a text message
  *
@@ -22,7 +23,19 @@ exports.sendTextMessage = function (req, body) {
     const chatSdk = new Chat();
     chatSdk.init(selectedServerEnv);
     chatSdk.connect(req.app.get('therapistId'), req.app.get('token'))
-      .catch((error) => reject(error));
+      .catch((error) => {
+        // if the connection fails, we regenreate the token by logging in again
+        // and we try to reconnect
+        authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+          .then((response) => {
+            req.app.set('therapistId', response.user.id);
+            req.app.set('token', response.token);
+            chatSdk.connect(response.user.id, response.token)
+          })
+          .catch((error) => {
+            throw Error(`Error during authentication: ${error}`);
+          });
+      });
 
     const subscriptionId = chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
       if (connectionStatus === ConnectionStatus.Connected) {
