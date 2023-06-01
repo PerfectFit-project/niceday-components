@@ -105,7 +105,7 @@ class MessageHandler {
 
 function setupTokenRegeneration() {
   const rule = new schedule.RecurrenceRule();
-  rule.minute = new schedule.Range(0,59,1);
+  rule.hour = new schedule.Range(0,23,9);
 
   const job = schedule.scheduleJob(rule, function(){
 

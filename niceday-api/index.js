@@ -23,7 +23,7 @@ const authSdk = new Authentication(selectedServer);
 
 // swaggerRouter configuration
 const options = {
-   routing: {
+  routing: {
     controllers: path.join(__dirname, './controllers'),
   },
 };
@@ -32,7 +32,6 @@ const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/op
 const app = expressAppConfig.getApp();
 
 function createNicedayApiServer() {
-
   authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
     .then((response) => {
       app.set('therapistId', response.user.id);
@@ -48,22 +47,19 @@ function createNicedayApiServer() {
   return server;
 }
 
-
 function setupTokenRegeneration() {
   const rule = new schedule.RecurrenceRule();
-  rule.hour = new schedule.Range(0,23,9);
+  rule.hour = new schedule.Range(0, 23, 9);
 
-  const job = schedule.scheduleJob(rule, function(){
-
+  const job = schedule.scheduleJob(rule, () => {
     authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
       .then((response) => {
         app.set('therapistId', response.user.id);
         app.set('token', response.token);
-    })
-    .catch((error) => {
-    throw Error(`Error during authentication: ${error}`);
-    });
-  
+      })
+      .catch((error) => {
+        throw Error(`Error during authentication: ${error}`);
+      });
   });
 
   return job;
@@ -72,9 +68,9 @@ function setupTokenRegeneration() {
 module.exports.createNicedayApiServer = createNicedayApiServer;
 if (require.main === module) {
   const server = createNicedayApiServer();
-  
+
   // schedule a tasks to regenerate the token every 9 hours
-  const job = setupTokenRegeneration();
+  setupTokenRegeneration();
 
   server.listen(serverPort, () => {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
