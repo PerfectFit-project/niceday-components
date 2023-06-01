@@ -41,9 +41,6 @@ function createNicedayApiServer() {
     .catch((error) => {
       throw Error(`Error during authentication: ${error}`);
     });
-  
-  // schedule a tasks to regenerate the token every 9 hours
-  setupTokenRegeneration()
 
   // Initialize the Swagger middleware
   const server = http.createServer(app);
@@ -68,11 +65,16 @@ function setupTokenRegeneration() {
     });
   
   });
+
+  return job;
 }
 
 module.exports.createNicedayApiServer = createNicedayApiServer;
 if (require.main === module) {
   const server = createNicedayApiServer();
+  
+  // schedule a tasks to regenerate the token every 9 hours
+  const job = setupTokenRegeneration();
 
   server.listen(serverPort, () => {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);

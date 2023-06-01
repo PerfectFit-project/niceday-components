@@ -105,7 +105,7 @@ class MessageHandler {
 
 function setupTokenRegeneration() {
   const rule = new schedule.RecurrenceRule();
-  rule.hour = new schedule.Range(0,23,9);
+  rule.minute = new schedule.Range(0,59,1);
 
   const job = schedule.scheduleJob(rule, function(){
 
@@ -113,6 +113,7 @@ function setupTokenRegeneration() {
       .then((response) => {
         chatSdk.init(selectedServerEnv);
         chatSdk.connect(response.user.id, response.token);
+        console.log('new token: ', response.token);
     })
     .catch((error) => {
     throw Error(`Error during authentication: ${error}`);
@@ -125,8 +126,6 @@ function setup(therapistId, token) {
   // Setup connection
   chatSdk.init(selectedServerEnv);
   chatSdk.connect(therapistId, token);
-
-  setupTokenRegeneration();
 
   // Send initial presence when connected
   chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
@@ -144,4 +143,6 @@ module.exports.setup = setup;
 
 authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
   setup(response.user.id, response.token);
+
+  setupTokenRegeneration();
 });
