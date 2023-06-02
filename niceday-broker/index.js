@@ -111,7 +111,10 @@ function setupTokenRegeneration() {
     authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
       .then((response) => {
         chatSdk.init(selectedServerEnv);
-        chatSdk.connect(response.user.id, response.token);
+        chatSdk.connect(response.user.id, response.token)
+          .catch((connectError) => {
+            throw Error(`Error during chat connection: ${connectError}`);
+          });
       })
       .catch((error) => {
         throw Error(`Error during authentication: ${error}`);
