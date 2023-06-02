@@ -36,9 +36,9 @@ exports.sendTextMessage = function (req, body) {
             req.app.set('therapistId', response.user.id);
             req.app.set('token', response.token);
             chatSdk.connect(response.user.id, response.token)
-            .catch((connectError) => {
-              throw Error(`Error during chat connection: ${connectError}`);
-            });
+              .catch((connectError) => {
+                throw Error(`Error during chat connection: ${connectError}`);
+              });
           })
           .catch((loginError) => {
             throw Error(`Error during authentication: ${loginError}`);
