@@ -105,18 +105,17 @@ class MessageHandler {
 
 function setupTokenRegeneration() {
   const rule = new schedule.RecurrenceRule();
-  rule.hour = new schedule.Range(0,23,8);
+  rule.hour = new schedule.Range(0, 23, 8);
 
-  const job = schedule.scheduleJob(rule, function(){
-
+  const job = schedule.scheduleJob(rule, () => {
     authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
       .then((response) => {
         chatSdk.init(selectedServerEnv);
         chatSdk.connect(response.user.id, response.token);
-    })
-    .catch((error) => {
-    throw Error(`Error during authentication: ${error}`);
-    });
+      })
+      .catch((error) => {
+        throw Error(`Error during authentication: ${error}`);
+      });
   });
 
   return job;
