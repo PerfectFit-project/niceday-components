@@ -123,10 +123,10 @@ paths:
           application/json:
             schema:
               required:
-                - invitaton_id
+                - invitation_id
               type: object
               properties:
-                invitaton_id:
+                invitation_id:
                   type: string
                   description: ID of the connection request
                   example: "38527"
