@@ -18,14 +18,14 @@ const contacts = new Contacts(selectedServer);
  * @param req - The node.js express request object
  * @param body - The node.js express body object.
  * */
-exports.getConnectionRequests = (req, body) => new Promise((resolve, reject) => {
+exports.getConnectionRequests = (req) => new Promise((resolve, reject) => {
   contacts.getRequestedContacts(req.app.get('token'))
     .then((result) => {
-      resolve(result)
+      resolve(result);
     })
     .catch((error) => {
       reject(Error(`Error during connections requests retrieval: ${error}`));
-    })
+    });
 });
 
 /**
@@ -34,13 +34,12 @@ exports.getConnectionRequests = (req, body) => new Promise((resolve, reject) => 
  * @param req - The node.js express request object
  * @param body - The node.js express body object. Should contain invitation id.
  * */
-exports.setAcceptConnectionRequests = (req, body) => new Promise((resolve, reject) => {
+exports.setAcceptConnection = (req, body) => new Promise((resolve, reject) => {
   contacts.acceptInvitation(req.app.get('token'), body.invitaton_id)
     .then((result) => {
-      console.log('body: ',body);
-      resolve(result)
+      resolve(result);
     })
     .catch((error) => {
       reject(Error(`Error during connections requests acceptance: ${error}`));
-    })
+    });
 });

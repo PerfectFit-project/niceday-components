@@ -1,8 +1,9 @@
 const utils = require('../utils/writer.jsx');
-const ConnectionRequest = require('../service/ConnectionRequestsService.js');
+const ConnectionRequest = require('../service/ConnectionRequestsService');
 
+// eslint-disable-next-line no-unused-vars
 module.exports.getConnectionRequests = function getConnectionRequests(req, res, next, body) {
-  ConnectionRequest.getConnectionRequests(req, body)
+  ConnectionRequest.getConnectionRequests(req)
     .then((response) => {
       utils.writeJson(res, response);
     })
@@ -11,8 +12,9 @@ module.exports.getConnectionRequests = function getConnectionRequests(req, res, 
     });
 };
 
-module.exports.setAcceptConnectionRequests = function setAcceptConnectionRequests(req, res, next, body) {
-  ConnectionRequest.setAcceptConnectionRequests(req, body)
+// eslint-disable-next-line no-unused-vars
+module.exports.setAcceptConnection = function setAcceptConnection(req, res, next, body) {
+  ConnectionRequest.setAcceptConnection(req, body)
     .then((response) => {
       utils.writeJson(res, response);
     })

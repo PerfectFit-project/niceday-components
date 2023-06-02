@@ -117,7 +117,7 @@ paths:
   /acceptconnection:
     post:
       summary: Accept the connection request specified in the body
-      operationId: setAcceptConnectionRequests
+      operationId: setAcceptConnection
       requestBody:
         content:
           application/json:
