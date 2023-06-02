@@ -49,7 +49,7 @@ function createNicedayApiServer() {
 
 function setupTokenRegeneration() {
   const rule = new schedule.RecurrenceRule();
-  rule.hour = new schedule.Range(0, 23, 9);
+  rule.hour = new schedule.Range(0, 23, 8);
 
   const job = schedule.scheduleJob(rule, () => {
     authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
