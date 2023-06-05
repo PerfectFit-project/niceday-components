@@ -140,7 +140,10 @@ function setup(therapistId, token) {
     } else if (connectionStatus === ConnectionStatus.Disconnected) {
       authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
         .then((response) => {
-          chatSdk.connect(response.user.id, response.token);
+          chatSdk.connect(response.user.id, response.token)
+            .catch((connectionError) => {
+              throw Error(`Error during connection: ${connectionError}`);
+            });
         })
         .catch((error) => {
           throw Error(`Error during relogin: ${error}`);
