@@ -141,6 +141,9 @@ function setup(therapistId, token) {
       authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
         .then((response) => {
           chatSdk.connect(response.user.id, response.token);
+        })
+        .catch((error) => {
+          throw Error(`Error during relogin: ${error}`);
         });
     }
   });
@@ -153,8 +156,12 @@ function setup(therapistId, token) {
 module.exports.setup = setup;
 
 if (require.main === module) {
-  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
+  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+  .then((response) => {
     setup(response.user.id, response.token);
+  })
+  .catch((error) => {
+    throw Error(`Error during authentication: ${error}`);
   });
 
   // schedule a tasks to regenerate the token every 9 hours
