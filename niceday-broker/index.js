@@ -50,9 +50,13 @@ function requestRasa(text, userId, attachmentIds, callback) {
  * Send a message to a niceday recipient
  * */
 function sendMessage(text, recipientId, additionalContents) {
-  chatSdk.sendTextMessage(recipientId, text, additionalContents).then((response) => {
-    console.log('Successfully sent the message', response);
-  });
+  chatSdk.sendTextMessage(recipientId, text, additionalContents)
+    .then((response) => {
+      console.log('Successfully sent the message', response);
+    })
+    .catch((error) => {
+      throw Error(`Send message failed: ${error}`);
+    });
 }
 
 function sleep(ms) {
@@ -133,6 +137,11 @@ function setup(therapistId, token) {
   chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
     if (connectionStatus === ConnectionStatus.Connected) {
       chatSdk.sendInitialPresence();
+    } else if (connectionStatus === ConnectionStatus.Disconnected) {
+      authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+        .then((response) => {
+          chatSdk.connect(response.user.id, response.token);
+        });
     }
   });
 
