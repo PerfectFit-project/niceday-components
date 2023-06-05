@@ -35,7 +35,7 @@ exports.getConnectionRequests = (req) => new Promise((resolve, reject) => {
  * @param body - The node.js express body object. Should contain invitation id.
  * */
 exports.setAcceptConnection = (req, body) => new Promise((resolve, reject) => {
-  contacts.acceptInvitation(req.app.get('token'), body.invitaton_id)
+  contacts.acceptInvitation(req.app.get('token'), body.invitation_id)
     .then((result) => {
       resolve(result);
     })

@@ -17,6 +17,14 @@ const MOCK_TRACKER_REMINDER_RESPONSE = {
   owner: NICEDAY_TEST_USER_ID,
   startTime: '2022-05-17T15:10:00.000Z',
 };
+const MOCK_REQUEST_ID = '18981';
+const MOCK_PENDING_REQUESTS = [
+  {
+    id: NICEDAY_TEST_USER_ID,
+    invitationId: MOCK_REQUEST_ID,
+  },
+];
+const MOCK_ACCEPT_REQUESTS = {};
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -40,6 +48,12 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       Contacts: jest.fn().mockImplementation(() => ({
         getConnectedContacts: () => new Promise((resolve) => {
           resolve(MOCK_USER_DATA);
+        }),
+        getRequestedContacts: () => new Promise((resolve) => {
+          resolve(MOCK_PENDING_REQUESTS);
+        }),
+        acceptInvitation: () => new Promise((resolve) => {
+          resolve(MOCK_ACCEPT_REQUESTS);
         }),
       })),
       Authentication: jest.fn().mockImplementation(() => ({
@@ -136,9 +150,9 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
   });
 
   it('Test getting smoking tracker data with /usertrackers/smoking/ endpoint', () => {
-  /*
-    Sends a GET to the /usertrackers/smoking endpoint.
-  */
+    /*
+      Sends a GET to the /usertrackers/smoking endpoint.
+    */
 
     const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/usertrackers/smoking/${NICEDAY_TEST_USER_ID}?`;
     const params = new URLSearchParams({
@@ -182,6 +196,45 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       .then((response) => response.json())
       .then((responseBody) => {
         expect(responseBody).toMatchObject(MOCK_TRACKER_REMINDER_RESPONSE);
+      })
+      .catch((error) => {
+        throw new Error(`Error during fetch: ${error}`);
+      });
+  });
+
+  it('Test getting pending contact request with /connectionrequests endpoint', () => {
+    /*
+      Sends a GET to the /connectionrequests endpoint.
+    */
+
+    const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/connectionrequests`;
+    return fetch(urlreq)
+      .then((response) => response.json())
+      .then((responseBody) => {
+        expect(responseBody).toEqual(MOCK_PENDING_REQUESTS);
+      })
+      .catch((error) => {
+        throw new Error(`Error during fetch: ${error}`);
+      });
+  });
+
+  it('Test accepting contact request /acceptconnection endpoint', () => {
+    /*
+      Sends a POST to the /acceptconnection endpoint.
+    */
+
+    const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/acceptconnection`;
+    const data = JSON.stringify({
+      invitation_id: MOCK_REQUEST_ID,
+    });
+    return fetch(urlreq, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((responseBody) => {
+        expect(responseBody).toEqual(MOCK_ACCEPT_REQUESTS);
       })
       .catch((error) => {
         throw new Error(`Error during fetch: ${error}`);
