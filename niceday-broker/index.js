@@ -54,8 +54,14 @@ function sendMessage(text, recipientId, additionalContents) {
     .then((response) => {
       console.log('Successfully sent the message', response);
     })
-    .catch((error) => {
-      throw Error(`Send message failed: ${error}`);
+    .catch(() => {
+      chatSdk.sendTextMessage(recipientId, text, additionalContents)
+        .then((newResponse) => {
+          console.log('Successfully sent the message', newResponse);
+        })
+        .catch((error) => {
+          throw Error(`Send message failed: ${error}`);
+        });
     });
 }
 
