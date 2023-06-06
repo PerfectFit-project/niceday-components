@@ -67,6 +67,21 @@ paths:
         "200":
           description: Success
       x-swagger-router-controller: UserData
+  /connectionrequests:
+    get:
+      summary: Get the pending connection requests
+      operationId: getConnectionRequests
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                description: List of connection requests
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConnectionRequest'
+      x-swagger-router-controller: ConnectionRequests
   /usertrackers/smoking/{userId}:
     get:
       summary: Get smoking tracker data for specific user
@@ -106,6 +121,26 @@ paths:
                 items:
                   $ref: '#/components/schemas/SmokingTrackerEntry'
       x-swagger-router-controller: UserTrackers
+  /acceptconnection:
+    post:
+      summary: Accept the connection request specified in the body
+      operationId: setAcceptConnection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - invitation_id
+              type: object
+              properties:
+                invitation_id:
+                  type: string
+                  description: ID of the connection request
+                  example: "38527"
+      responses:
+        "200":
+          description: Success
+      x-swagger-router-controller: ConnectionRequests
   /usertrackers/statuses:
     post:
       summary: Enable or disable trackers for a user
@@ -319,3 +354,63 @@ components:
           description: after
           example: 60
 
+    ConnectionRequest:
+      description: Connection request object
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 38527
+        hashId:
+          type: string
+          description: Uhashed ID
+          example: '9o0xZ0JGRauKnlY31dYJjA'
+        firstName: 
+          type: string
+          description: First Name
+          example: 'Name'
+        lastName: 
+          type: string
+          description: Last Name
+          example: 'Last Name'
+        bio: 
+          type: string
+          description: Bio
+          example: ''
+        location:
+          type: string
+          description: Location
+          example: ''
+        gender: 
+          type: string
+          description: Gender
+          example: 'NOT_DEFINED'
+        birthDate: 
+          type: string
+          description: birth date
+          example: '1970-01-01'
+        email: 
+          type: string
+          description: email
+          example: 'email@mail.com'
+        registerDate: 
+          type: string
+          description: Register Date
+          example: '2023-01-26T16:16:35.575Z'
+        image: 
+          type: string
+          description: User ID
+          example: 'https://image.jpg'
+        invitationCreatedAt: 
+          type: string
+          description: User ID
+          example: '2023-06-06T11:37:57.700Z'
+        invitationId: 
+          type: integer
+          description: Invitation ID
+          example: 18994,
+        proposedBy: 
+          type: string
+          description: User ID
+          example: ''
