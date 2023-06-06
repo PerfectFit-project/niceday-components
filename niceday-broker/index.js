@@ -50,9 +50,19 @@ function requestRasa(text, userId, attachmentIds, callback) {
  * Send a message to a niceday recipient
  * */
 function sendMessage(text, recipientId, additionalContents) {
-  chatSdk.sendTextMessage(recipientId, text, additionalContents).then((response) => {
-    console.log('Successfully sent the message', response);
-  });
+  chatSdk.sendTextMessage(recipientId, text, additionalContents)
+    .then((response) => {
+      console.log('Successfully sent the message', response);
+    })
+    .catch(() => {
+      chatSdk.sendTextMessage(recipientId, text, additionalContents)
+        .then((newResponse) => {
+          console.log('Successfully sent the message', newResponse);
+        })
+        .catch((error) => {
+          throw Error(`Send message failed: ${error}`);
+        });
+    });
 }
 
 function sleep(ms) {
@@ -133,6 +143,17 @@ function setup(therapistId, token) {
   chatSdk.subscribeToConnectionStatusChanges((connectionStatus) => {
     if (connectionStatus === ConnectionStatus.Connected) {
       chatSdk.sendInitialPresence();
+    } else if (connectionStatus === ConnectionStatus.Disconnected) {
+      authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+        .then((response) => {
+          chatSdk.connect(response.user.id, response.token)
+            .catch((connectionError) => {
+              throw Error(`Error during connection: ${connectionError}`);
+            });
+        })
+        .catch((error) => {
+          throw Error(`Error during relogin: ${error}`);
+        });
     }
   });
 
@@ -144,9 +165,13 @@ function setup(therapistId, token) {
 module.exports.setup = setup;
 
 if (require.main === module) {
-  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD).then((response) => {
-    setup(response.user.id, response.token);
-  });
+  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+    .then((response) => {
+      setup(response.user.id, response.token);
+    })
+    .catch((error) => {
+      throw Error(`Error during authentication: ${error}`);
+    });
 
   // schedule a tasks to regenerate the token every 9 hours
   setupTokenRegeneration();
