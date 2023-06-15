@@ -140,7 +140,30 @@ paths:
       responses:
         "200":
           description: Success
-      x-swagger-router-controller: ConnectionRequests
+        "500":
+          description: Failed
+  /removecontact:
+    post:
+      summary: Remove the contact of the user specified in the body
+      operationId: removeContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - user_id
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ID of the user to be removed
+                  example: "38527"
+      responses:
+        "200":
+          description: Success
+        "500":
+          description: Failed
+      x-swagger-router-controller: RemoveContact
   /usertrackers/statuses:
     post:
       summary: Enable or disable trackers for a user
