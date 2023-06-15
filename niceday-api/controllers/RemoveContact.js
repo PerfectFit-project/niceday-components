@@ -8,7 +8,6 @@ module.exports.removeContact = function removeContact(req, res, next, body) {
       utils.writeJson(res, response);
     })
     .catch((response) => {
-      console.log('Error: ', response)
       utils.writeJson(res, utils.respondWithCode(500, response));
     });
 };
