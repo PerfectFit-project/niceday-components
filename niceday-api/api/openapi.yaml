@@ -142,6 +142,7 @@ paths:
           description: Success
         "500":
           description: Failed
+      x-swagger-router-controller: ConnectionRequests
   /removecontact:
     post:
       summary: Remove the contact of the user specified in the body
