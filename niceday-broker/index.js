@@ -14,7 +14,11 @@ require('dotenv').config();
 const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS, ENVIRONMENT } = process.env;
 let { RASA_AGENT_URL } = process.env;
 RASA_AGENT_URL = (RASA_AGENT_URL === undefined) ? 'http://rasa_server:5005/webhooks/rest/webhook' : RASA_AGENT_URL;
-const MESSAGE_DELAY = 3000; // Delay in between messages in ms
+// proportional factor between the number of words in a message and the time to wait before the
+// newt message is delivered
+const WORDS_PER_SECOND = 5;
+// maximum delay between a message and the next one
+const MAX_DELAY = 10;
 
 const chatSdk = new Chat();
 let selectedServer;
@@ -73,22 +77,28 @@ function sleep(ms) {
  * Handle the response from rasa, send each message to the Niceday user.
  * We insert a delay in between messages, so the user has some time to read each message.
  * */
-function onRasaResponse() {
+async function onRasaResponse() {
   if (this.readyState === 4 && this.status === 200) {
     const responseJson = JSON.parse(this.responseText);
-    responseJson.forEach(async (message, i) => {
-      if (ENVIRONMENT === 'prod') {
-        await sleep(i * MESSAGE_DELAY);
-      }
+
+    const processMessage = async (message) => {
       const attachment = {
         replyOfId: null,
-        attachmentIds: [],
+        attachmentIds: message.metadata || [],
       };
-      if ('metadata' in message) {
-        attachment.attachmentIds = message.metadata;
-      }
+
       sendMessage(message.text, parseInt(message.recipient_id, 10), attachment);
-    });
+
+      if (ENVIRONMENT === 'prod') {
+        const delay = Math.min(MAX_DELAY, message.text.split(' ').length / WORDS_PER_SECOND);
+        await sleep(delay * 1000);
+      }
+    };
+
+    await responseJson.reduce(async (prevPromise, message) => {
+      await prevPromise;
+      await processMessage(message);
+    }, Promise.resolve());
   } else if (this.readyState === 4) {
     console.log('Something went wrong, status:', this.status, this.responseText);
   }
