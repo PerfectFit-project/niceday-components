@@ -3,13 +3,8 @@
 import { Authentication, SenseServer } from '@sense-os/goalie-js';
 import 'isomorphic-fetch'
 
-const { ENVIRONMENT } = process.env;
-if (ENVIRONMENT == 'dev'){
-    const authSdk = new Authentication(SenseServer.Alpha);
-}
-else {
-    const authSdk = new Authentication(SenseServer.Production);
-}
+const authSdk = new Authentication(SenseServer.Alpha);
+
 
 // Read in command line arguments
 var args = process.argv.slice(2)
