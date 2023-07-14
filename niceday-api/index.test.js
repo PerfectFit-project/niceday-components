@@ -3,12 +3,15 @@ require('isomorphic-fetch');
 const NICEDAY_TEST_SERVERPORT = 8080;
 const NICEDAY_TEST_USER_ID = 38527;
 const NICEDAY_TEST_TRACKER_RRULE = 'DTSTART:20210310T150000\nRRULE:FREQ=DAILY';
+const MOCK_ID_FROM = 1;
+const MOCK_ID_TO = 12345;
 const MOCK_USER_DATA = {
   id: NICEDAY_TEST_USER_ID,
   userProfile: {
     firstName: 'Mr Mock',
   },
 };
+const MOCK_TEST_MESSAGE = 'Test message';
 const MOCK_TRACKER_RESPONSE = { response: 'mock response' };
 const MOCK_SMOKING_TRACKER_RESPONSE = [
   { value: { measures: { measureCigarettes: { sensorData: MOCK_TRACKER_RESPONSE } } } }];
@@ -45,6 +48,24 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
       SenseServerEnvironment: () => ({
         Alpha: undefined,
       }),
+      Chat: jest.fn().mockImplementation(() => ({
+        init: jest.fn(),
+        connect: jest.fn(),
+        markMessageAsRead: jest.fn(),
+        subscribeToConnectionStatusChanges: jest.fn(),
+        sendInitialPresence: jest.fn(),
+        subscribeToIncomingMessage: (handler) => {
+          const mockTestMessage = {
+            from: MOCK_ID_FROM,
+            to: MOCK_ID_TO,
+            content: {
+              TEXT: MOCK_TEST_MESSAGE,
+            },
+          };
+
+          handler(mockTestMessage);
+        },
+      })),
       Contacts: jest.fn().mockImplementation(() => ({
         getConnectedContacts: () => new Promise((resolve) => {
           resolve(MOCK_USER_DATA);
