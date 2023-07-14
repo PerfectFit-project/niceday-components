@@ -27,7 +27,7 @@ const MOCK_PENDING_REQUESTS = [
     invitationId: MOCK_REQUEST_ID,
   },
 ];
-const MOCK_ACCEPT_REQUESTS = {};
+const MOCK_EMPTY_RESPONSE = {};
 
 // Contains all tests which require a mocked Senseserver
 describe('Tests on niceday-api server using mocked goalie-js', () => {
@@ -74,7 +74,10 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
           resolve(MOCK_PENDING_REQUESTS);
         }),
         acceptInvitation: () => new Promise((resolve) => {
-          resolve(MOCK_ACCEPT_REQUESTS);
+          resolve(MOCK_EMPTY_RESPONSE);
+        }),
+        removeContactFromUserContact: () => new Promise((resolve) => {
+          resolve(MOCK_EMPTY_RESPONSE);
         }),
       })),
       Authentication: jest.fn().mockImplementation(() => ({
@@ -255,7 +258,30 @@ describe('Tests on niceday-api server using mocked goalie-js', () => {
     })
       .then((response) => response.json())
       .then((responseBody) => {
-        expect(responseBody).toEqual(MOCK_ACCEPT_REQUESTS);
+        expect(responseBody).toEqual(MOCK_EMPTY_RESPONSE);
+      })
+      .catch((error) => {
+        throw new Error(`Error during fetch: ${error}`);
+      });
+  });
+
+  it('Test remove contact /removecontact endpoint', () => {
+    /*
+      Sends a POST to the /acceptconnection endpoint.
+    */
+
+    const urlreq = `http://localhost:${NICEDAY_TEST_SERVERPORT}/removecontact`;
+    const data = JSON.stringify({
+      user_id: NICEDAY_TEST_USER_ID.toString(),
+    });
+    return fetch(urlreq, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: data,
+    })
+      .then((response) => response.json())
+      .then((responseBody) => {
+        expect(responseBody).toEqual(MOCK_EMPTY_RESPONSE);
       })
       .catch((error) => {
         throw new Error(`Error during fetch: ${error}`);
