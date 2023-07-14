@@ -1,4 +1,6 @@
-const { Authentication, SenseServer, Chat, ConnectionStatus, SenseServerEnvironment } = require('@sense-os/goalie-js');
+const {
+  Authentication, SenseServer, Chat, ConnectionStatus, SenseServerEnvironment,
+} = require('@sense-os/goalie-js');
 const schedule = require('node-schedule');
 const path = require('path');
 const http = require('http');
@@ -12,6 +14,7 @@ const serverPort = 8080;
 
 const { THERAPIST_PASSWORD, THERAPIST_EMAIL_ADDRESS, ENVIRONMENT } = process.env;
 let selectedServer;
+let selectedServerEnv;
 
 if (ENVIRONMENT === 'dev') {
   selectedServer = SenseServer.Alpha;
@@ -33,23 +36,6 @@ const options = {
 
 const expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, 'api/openapi.yaml'), options);
 const app = expressAppConfig.getApp();
-
-function createNicedayApiServer() {
-  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
-    .then((response) => {
-      app.set('therapistId', response.user.id);
-      app.set('token', response.token);
-      setupChat(response.user.id, response.token)
-    })
-    .catch((error) => {
-      throw Error(`Error during authentication: ${error}`);
-    });
-
-  // Initialize the Swagger middleware
-  const server = http.createServer(app);
-
-  return server;
-}
 
 function setupChat(therapistId, token) {
   // Setup connection
@@ -76,6 +62,22 @@ function setupChat(therapistId, token) {
   });
 }
 
+function createNicedayApiServer() {
+  authSdk.login(THERAPIST_EMAIL_ADDRESS, THERAPIST_PASSWORD)
+    .then((response) => {
+      app.set('therapistId', response.user.id);
+      app.set('token', response.token);
+      setupChat(response.user.id, response.token);
+    })
+    .catch((error) => {
+      throw Error(`Error during authentication: ${error}`);
+    });
+
+  // Initialize the Swagger middleware
+  const server = http.createServer(app);
+
+  return server;
+}
 
 function setupTokenRegeneration() {
   const rule = new schedule.RecurrenceRule();

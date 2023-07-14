@@ -9,13 +9,11 @@
 
 exports.sendTextMessage = function (req, body) {
   return new Promise((resolve, reject) => {
-
-    const chatSdk = req.app.get('chatsdk')
+    const chatSdk = req.app.get('chatsdk');
     chatSdk.sendTextMessage(body.recipient_id, body.text).then((response) => {
       console.log('Successfully sent the message', response);
       resolve();
     })
       .catch((error) => reject(error));
-
   });
 };
